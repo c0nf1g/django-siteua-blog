@@ -1,0 +1,49 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}
+    Create a new Post
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h4>Add post</h4>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <form id="createPostForm" enctype="multipart/form-data">
+                    <div class="mt-2">
+                        <label for="title" class="form-label">Title</label><br>
+                        <input class="form-control" type="text" name="title" id="title">
+                    </div>
+                    <div class="mt-2">
+                        <label for="content" class="form-label">Content</label><br>
+                        <textarea class="form-control" id="content" name="content" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        <label for="category" class="form-label">Category</label><br>
+                        <select class="custom-select" id="categorySelect" name="category"></select>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        <label for="headerPhotoInput">Add header photo</label>
+                        <input type="file" class="form-control-file" id="headerPhoto" name="header_photo">
+                    </div>
+                    <button id="createPostButton" class="btn btn-primary" type="button">Create post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'blog/js/createUpdatePost.js' %}"></script>
+    <script>
+        $(document).ready(async () => {
+            const categoriesListUrl = '{% url 'api:categories-list' %}'
+            const postsListUrl = '{% url 'api:posts-list' %}'
+            const addPostRedirectUrl = '{% url 'blog:detail' post_id=1 %}'
+
+            await showCategories(categoriesListUrl)
+
+            $(`#createPostButton`).on('click', async () => {
+                await createUpdatePost('createPostForm', postsListUrl, addPostRedirectUrl, 'post')
+            })
+        })
+    </script>
+{% endblock %}

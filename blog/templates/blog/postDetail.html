@@ -1,0 +1,103 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% load hitcount_tags %}
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <article>
+                    <header class="mb-4">
+                        <!-- Post title-->
+                        <h1 class="fw-bolder mb-1">{{ post.title }}</h1>
+                        <!-- Post meta content-->
+                        <div class="text-muted fst-italic mb-2">
+                            <span>
+                            {{ post.get_date_ago }} by
+                            <a href="{% url 'users:profile' post.author.id %}">
+                                {{ post.author.first_name }} {{ post.author.last_name }}
+                            </a>
+                            </span>
+                            <span class="ml-2">
+                                <i class="fa fa-eye" aria-hidden="true"></i> {% get_hit_count for post %}
+                            </span>
+                            <span class="ml-2">
+                                <i class="fa fa-star" aria-hidden="true"></i> <span id="recommendations"></span>
+                            </span>
+                        </div>
+                        <span class="badge badge-primary">{{ post.category }}</span>
+                    </header>
+                    {% if post.header_photo %}
+                        <figure class="mb-4"><img class="img-fluid rounded"
+                                                  src="{{ post.header_photo.url }}"></figure>
+                    {% endif %}
+                    <section class="mb-5">
+                        <p class="fs-5 mb-4">{{ post.content }}</p>
+                    </section>
+                    {% if user.is_authenticated %}
+                        <button class="btn btn-primary mb-2" type="button" id="recommendPost">Recommend <i
+                                class="fa fa-star" aria-hidden="true"></i></button>
+                    {% endif %}
+                    {% if post.author == user %}
+                        <button class="btn btn-success mb-2"
+                                onclick="location.href='{% url 'blog:edit_post' post.id %}'"
+                                type="button">
+                            Edit <i class="fa fa-edit"></i>
+                        </button>
+                        <button id="deletePost" class="btn btn-danger mb-2" type="button">
+                            Delete
+                        </button>
+                    {% endif %}
+                </article>
+                <section class="mb-5">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            {% if user.is_authenticated %}
+                                <div class="mb-5">
+                                    <form class="mb-4" id="addCommentForm"><textarea class="form-control" rows="3"
+                                                                                     placeholder="Join the discussion and leave a comment!"
+                                                                                     id="content"
+                                                                                     name="content"></textarea>
+                                        <button id="addCommentButton" class="btn btn-primary float-right my-2"
+                                                type="button">Add comment
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            <span id="commentSection"></span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'blog/js/postDetail.js' %}"></script>
+    <script>
+        $(document).ready(async function () {
+            const postsDetailUrl = '{% url 'api:posts-detail' post.id %}'
+            const commentsListUrl = '{% url 'api:comments-list' %}'
+            const postsRecommendUrl = '{% url 'api:posts-recommend' post.id %}'
+            const redirectUrl = '{% url 'blog:home' %}'
+
+            await updateRecommendations(postsDetailUrl)
+            await updateCommentSection(commentsListUrl, {{ post.id }})
+
+            $('#addCommentButton').on('click', async () => {
+                await addComment({{ post.id }}, commentsListUrl)
+            })
+
+            let recommendation = false
+            $('#recommendPost').on('click', async () => {
+                await addRecommendation(recommendation,
+                    '{{ user.email }}',
+                    postsDetailUrl,
+                    postsRecommendUrl
+                )
+            })
+
+            $('#deletePost').on('click', async () => {
+                await genericRequest(postsDetailUrl, 'delete')
+                return window.location.href = redirectUrl
+            })
+        });
+    </script>
+{% endblock %}

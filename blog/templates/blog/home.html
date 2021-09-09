@@ -1,0 +1,52 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}
+    Home
+{% endblock %}
+{% block content %}
+    <div class="container-fluid" style="">
+        <div class="row">
+            <div id="postList" class="col-8">
+                <div id="postDeck" class="row"></div>
+            </div>
+            <div class="col-4">
+                <div class="card sticky-top" style="top: 5em">
+                    <div class="card-body">
+                        <form id="filterForm">
+                            <h5>Sort by</h5>
+                            <div>
+                                <label for="selectSortParameter">Parameter</label>
+                                <select id="selectSortParameter" class="custom-select">
+                                    <option value="newer">newer</option>
+                                    <option value="older">older</option>
+                                    <option value="recommendations">recommendations</option>
+                                    <option value="views">views</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="selectCategory">Category</label>
+                                <select id="selectCategory" class="custom-select">
+                                    <option value="all" selected>All</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'blog/js/home.js' %}"></script>
+    <script>
+        $(document).ready(async () => {
+            const postListUrl = '{% url 'api:posts-list' %}'
+            const postRedirectUrl = '{% url 'blog:detail' post_id=1 %}'
+            const categoriesListUrl = '{% url 'api:categories-list' %}'
+
+            await showFilterCategories(categoriesListUrl)
+
+            $('#filterForm').on('change', async () => {
+                await showPosts(postListUrl, postRedirectUrl)
+            }).change()
+        })
+    </script>
+{% endblock %}
