@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+{% block title %}My posts{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h4>Recent posts</h4>
+        </div>
+        <div class="row">
+            {% for post in posts %}
+                <div class="card col-md-4 p-2 m-2">
+                    <a class="card-block stretched-link text-decoration-none" href="{% url 'blog:detail' post.id %}">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                    </a>
+                    <p class="card-text">{{ post.author.first_name }} {{ post.author.last_name }}</p>
+                    <p class="card-text"><small class="text-muted">{{ post.published }}</small></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

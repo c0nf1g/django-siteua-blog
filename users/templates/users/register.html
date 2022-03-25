@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Sign up
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class=".col-6 .col-md-4 mx-auto">
+                <div class="card">
+
+                    <article class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <p>Already has an account? <a href={% url 'users:login' %}>Sign in!</a></p>
+                            <button type="submit" class="btn btn-success">Sign up</button>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

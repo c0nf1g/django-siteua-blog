@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+    Login
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class=".col-6 .col-md-4 mx-auto">
+                <div class="card">
+                    <article class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            <p>Doesn't have account? <a href={% url 'users:register' %}>Create new one!</a></p>
+                            <button type="submit" class="btn btn-success">Sign in</button>
+                        </form>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

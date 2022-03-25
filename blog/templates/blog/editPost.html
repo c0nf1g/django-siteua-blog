@@ -1,0 +1,53 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}
+    Edit post
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h4>Edit post</h4>
+        </div>
+        <div class="row">
+            <div>
+                <form id="editPostForm">
+                    <div class="mt-2">
+                        <label for="title" class="form-label">Title</label><br>
+                        <input class="form-control" type="text" name="title" id="title" value="{{ post.title }}">
+                    </div>
+                    <div class="mt-2">
+                        <label for="content" class="form-label">Content</label><br>
+                        <textarea class="form-control" id="content" name="content" rows="4"
+                                  cols="50">{{ post.content }}</textarea>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        <label for="category" class="form-label">Category</label><br>
+                        <select class="custom-select" id="categorySelect" name="category"></select>
+                    </div>
+                    <div class="mt-2 mb-2">
+                        {% if post.header_photo %}
+                            Currently: <a href="{{ post.header_photo.url }}">{{ post.header_photo.url }}</a><br>
+                        {% endif %}
+                        Change:
+                        <input type="file" class="form-control-file" id="headerPhoto" name="header_photo">
+                    </div>
+                    <button id="editPostButton" class="btn btn-primary" type="button">Edit Post</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'blog/js/createUpdatePost.js' %}"></script>
+    <script>
+        $(document).ready(async () => {
+            const categoriesListUrl = '{% url 'api:categories-list' %}'
+            const addPostRedirectUrl = '{% url 'blog:detail' post.id %}'
+            const postsDetailUrl = '{% url 'api:posts-detail' post.id %}'
+
+            await showCategories(categoriesListUrl)
+
+            $(`#editPostButton`).on('click', async () => {
+                await createUpdatePost('editPostForm', postsDetailUrl, addPostRedirectUrl, 'put')
+            })
+        })
+    </script>
+{% endblock %}

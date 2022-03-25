@@ -1,0 +1,48 @@
+body {
+    padding-top: 80px;
+    font-family: 'PT Sans', sans-serif !important;
+    font-weight: 400;
+    position: relative;
+}
+
+.navbar-light {
+    background-color: #fff;
+}
+
+.navbar-nav {
+    text-align: center;
+}
+
+.image-cap {
+    vertical-align: middle !important;
+    border-style: none !important;
+    width: 100% !important;
+    height: 250px !important;
+    object-fit: none !important;
+}
+
+.user-small-image {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.container-fluid {
+    padding-left: 30px;
+    padding-right: 30px
+}
+
+.site-footer {
+    background-color: #f8f9fa;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.main-container {
+ min-height: 100vh; /* will cover the 100% of viewport */
+ display: block;
+ position: relative;
+ padding-bottom: 150px; /* height of your footer */
+}

@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <div style="text-align: center;">
+            {% if blog_user.profile_photo %}
+                <img src="{{ blog_user.profile_photo.url }}" class="user-small-image">
+            {% else %}
+                <img src="{% static 'blog/images/default-profile-picture.png' %}" class="user-small-image">
+            {% endif %}
+            <h3>{{ blog_user.first_name }} {{ blog_user.last_name }}</h3>
+            <span class="badge badge-primary">{{ blog_user.email }}</span>
+        </div>
+    </div>
+    <div class="container pt-4">
+        <div id="postDeck" class="row d-flex justify-content-center">
+
+        </div>
+    </div>
+    <script src="{% static 'users/js/userProfile.js' %}"></script>
+    <script>
+        $(document).ready(async () => {
+            const postListUrl = '{% url 'api:posts-list' %}'
+            const postRedirectUrl = '{% url 'blog:detail' post_id=1 %}'
+            await showUsersPosts(postListUrl, postRedirectUrl, {{ blog_user.id }})
+        })
+    </script>
+{% endblock %}
